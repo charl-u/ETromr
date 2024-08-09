@@ -1,0 +1,189 @@
+# lightning.pytorch==1.9.5
+seed_everything: true
+trainer:
+  logger: true
+  enable_checkpointing: true
+  callbacks:
+  - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+    init_args:
+      dirpath: null
+      filename: '{epoch}-{V_SymbER:.4f}-{V_ER>0:.4f}-{V_ER>1:.4f}-{V_ER>2:.4f}'
+      monitor: V_SymbER
+      verbose: false
+      save_last: true
+      save_top_k: 5
+      save_weights_only: false
+      mode: min
+      auto_insert_metric_name: true
+      every_n_train_steps: null
+      train_time_interval: null
+      every_n_epochs: null
+      save_on_train_epoch_end: null
+  default_root_dir: null
+  gradient_clip_val: null
+  gradient_clip_algorithm: null
+  num_nodes: 1
+  num_processes: null
+  devices: 1
+  gpus: 1
+  auto_select_gpus: null
+  tpu_cores: null
+  ipus: null
+  enable_progress_bar: true
+  overfit_batches: 0.0
+  track_grad_norm: -1
+  check_val_every_n_epoch: 1
+  fast_dev_run: false
+  accumulate_grad_batches: null
+  max_epochs: 200
+  min_epochs: 50
+  max_steps: -1
+  min_steps: null
+  max_time: '{''days'': 10}'
+  limit_train_batches: null
+  limit_val_batches: null
+  limit_test_batches: null
+  limit_predict_batches: null
+  val_check_interval: null
+  log_every_n_steps: 50
+  accelerator: gpu
+  strategy: null
+  sync_batchnorm: false
+  precision: 32
+  enable_model_summary: true
+  num_sanity_val_steps: 2
+  profiler: null
+  benchmark: null
+  deterministic: null
+  reload_dataloaders_every_n_epochs: 0
+  auto_lr_find: false
+  replace_sampler_ddp: true
+  detect_anomaly: false
+  auto_scale_batch_size: false
+  plugins: null
+  amp_backend: null
+  amp_level: null
+  move_metrics_to_cpu: false
+  multiple_trainloader_mode: max_size_cycle
+  inference_mode: true
+
+# CNN+RNN 
+model:
+  encoder: 
+    class_path: model.basic.CNNEncoder.CNNEncoder
+  decoder: 
+    class_path: model.basic.RNNDecoder.RNNDecoder
+  decoder_out_dim: 1024
+  ctc_utils: 
+    class_path: utils.CommonCTCUtils.CommonCTCUtil
+    init_args:
+      # vocab_path: dataset/CameraPrIMuS/vocab.txt
+      vocab_path: dataset/RealCamera/vocab.txt
+  lr: 0.001
+
+# CNN+RetNet
+# model:
+#   encoder: 
+#     class_path: model.basic.CNNEncoder.CNNEncoder
+#   decoder: 
+#     class_path: model.basic.RetNet.RetNet
+#     init_args:
+#       input_dim: 2048
+#       d_model: 512
+#       nhead: 8
+#       num_layers: 6
+#       dropout: 0.1
+#       activation: swish
+#       dim_feedforward: 2048
+#       norm_first: false
+#       layer_norm_eps: 1e-6
+
+# CRNN+RetNet
+# model:
+#   encoder: 
+#     class_path: model.basic.CRNNEncoder.CRNNEncoder
+#     init_args:
+#       cnn: model.basic.CNNEncoder.CNNEncoder
+#       rnn: model.basic.RNNDecoder.RNNDecoder
+#   decoder: 
+#     class_path: model.basic.RetNet.RetNet
+#     init_args:
+#       input_dim: 1024
+#       d_model: 1024
+#       nhead: 4
+#       num_layers: 6
+#       dropout: 0.1
+#       activation: swish
+#       dim_feedforward: 2048
+#       norm_first: false
+#       layer_norm_eps: 1e-6
+#   ctc_utils: 
+#     class_path: utils.CommonCTCUtils.CommonCTCUtil
+#     init_args:
+#       vocab_path: dataset/RealCamera/vocab.txt
+#   lr: 0.001
+
+# ViTEncoder only
+# model:
+#   encoder:
+#     class_path: model.basic.ViTEncoder.ViTEncoder
+#     init_args: 
+#       max_height: 128
+#       max_width: 1024
+#       channels: 1
+#       encoder_dim: 512
+#       patch_size: 32
+#       encoder_depth: 4
+#       encoder_heads: 8
+
+#   decoder:
+#     class_path: torch.nn.Identity
+
+#   decoder_out_dim: 512
+  
+#   ctc_utils:
+#     class_path: utils.CommonCTCUtils.CommonCTCUtil
+#     init_args:
+#       vocab_path: dataset/RealCamera/vocab.txt
+#   lr: 0.001
+
+# SPAN+RetNet
+# model:
+#   encoder:
+#     class_path: model.basic.SPANRetNet.RetentionSpanEncoder
+#     init_args: 
+#       in_channels: 1
+#       dropout: 0.4
+#       use_pe: true
+#   decoder:
+#     class_path: model.basic.RetNet.MyRetNetDecoder
+#     init_args:
+#       input_dim: 2048
+#       d_model: 512
+#       nhead: 8
+#       num_layers: 6
+#       dropout: 0.1
+#       activation: swish
+#       dim_feedforward: 2048
+#       norm_first: false
+#       layer_norm_eps: 1e-6
+#       casual: false
+#       mask_type: 'retnet'
+#   decoder_out_dim: 512
+#   lr: 0.001
+#   ctc_utils:
+#     class_path: utils.CommonCTCUtils.CommonCTCUtil
+#     init_args:
+#       vocab_path: dataset/CameraPrIMuS/vocab.txt
+
+
+data:
+  root_dir: dataset/RealCamera
+  img_suffix: .jpg
+  label_suffix: _formatted.semantic
+  max_len: 64
+  batch_size: 32
+  num_workers: 8
+  pin_memory: true
+  shuffle: true
+ckpt_path: null
