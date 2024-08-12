@@ -67,7 +67,7 @@ trainer:
   multiple_trainloader_mode: max_size_cycle
   inference_mode: true
 
-# CNN+RNN 
+# model config
 model:
   encoder: 
     class_path: model.basic.CNNEncoder.CNNEncoder
@@ -77,108 +77,12 @@ model:
   ctc_utils: 
     class_path: utils.CommonCTCUtils.CommonCTCUtil
     init_args:
-      # vocab_path: dataset/CameraPrIMuS/vocab.txt
-      vocab_path: dataset/RealCamera/vocab.txt
+      vocab_path: cpms-dataset/RealCamera/vocab.txt
   lr: 0.001
 
-# CNN+RetNet
-# model:
-#   encoder: 
-#     class_path: model.basic.CNNEncoder.CNNEncoder
-#   decoder: 
-#     class_path: model.basic.RetNet.RetNet
-#     init_args:
-#       input_dim: 2048
-#       d_model: 512
-#       nhead: 8
-#       num_layers: 6
-#       dropout: 0.1
-#       activation: swish
-#       dim_feedforward: 2048
-#       norm_first: false
-#       layer_norm_eps: 1e-6
-
-# CRNN+RetNet
-# model:
-#   encoder: 
-#     class_path: model.basic.CRNNEncoder.CRNNEncoder
-#     init_args:
-#       cnn: model.basic.CNNEncoder.CNNEncoder
-#       rnn: model.basic.RNNDecoder.RNNDecoder
-#   decoder: 
-#     class_path: model.basic.RetNet.RetNet
-#     init_args:
-#       input_dim: 1024
-#       d_model: 1024
-#       nhead: 4
-#       num_layers: 6
-#       dropout: 0.1
-#       activation: swish
-#       dim_feedforward: 2048
-#       norm_first: false
-#       layer_norm_eps: 1e-6
-#   ctc_utils: 
-#     class_path: utils.CommonCTCUtils.CommonCTCUtil
-#     init_args:
-#       vocab_path: dataset/RealCamera/vocab.txt
-#   lr: 0.001
-
-# ViTEncoder only
-# model:
-#   encoder:
-#     class_path: model.basic.ViTEncoder.ViTEncoder
-#     init_args: 
-#       max_height: 128
-#       max_width: 1024
-#       channels: 1
-#       encoder_dim: 512
-#       patch_size: 32
-#       encoder_depth: 4
-#       encoder_heads: 8
-
-#   decoder:
-#     class_path: torch.nn.Identity
-
-#   decoder_out_dim: 512
-  
-#   ctc_utils:
-#     class_path: utils.CommonCTCUtils.CommonCTCUtil
-#     init_args:
-#       vocab_path: dataset/RealCamera/vocab.txt
-#   lr: 0.001
-
-# SPAN+RetNet
-# model:
-#   encoder:
-#     class_path: model.basic.SPANRetNet.RetentionSpanEncoder
-#     init_args: 
-#       in_channels: 1
-#       dropout: 0.4
-#       use_pe: true
-#   decoder:
-#     class_path: model.basic.RetNet.MyRetNetDecoder
-#     init_args:
-#       input_dim: 2048
-#       d_model: 512
-#       nhead: 8
-#       num_layers: 6
-#       dropout: 0.1
-#       activation: swish
-#       dim_feedforward: 2048
-#       norm_first: false
-#       layer_norm_eps: 1e-6
-#       casual: false
-#       mask_type: 'retnet'
-#   decoder_out_dim: 512
-#   lr: 0.001
-#   ctc_utils:
-#     class_path: utils.CommonCTCUtils.CommonCTCUtil
-#     init_args:
-#       vocab_path: dataset/CameraPrIMuS/vocab.txt
-
-
+# data config
 data:
-  root_dir: dataset/RealCamera
+  root_dir: cpms-dataset/RealCamera
   img_suffix: .jpg
   label_suffix: _formatted.semantic
   max_len: 64
